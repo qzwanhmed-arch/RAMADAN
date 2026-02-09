@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إمساكية رمضان - الموصل</title>
+
+<style>
+body{
+    font-family: Tahoma;
+    background: linear-gradient(#0b1e3f,#102b5c);
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+.card{
+    background: rgba(255,255,255,0.08);
+    padding:20px;
+    border-radius:20px;
+    margin:15px auto;
+    width:90%;
+    max-width:420px;
+    box-shadow:0 0 15px rgba(0,0,0,0.3);
+}
+h1{color:#ffd700}
+table{width:100%;margin-top:10px}
+td{padding:8px;border-bottom:1px solid #ffffff33}
+.duaa{
+    background:#ffd700;
+    color:#000;
+    font-weight:bold;
+    font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🌙 إمساكية رمضان</h1>
+<h2>مدينة الموصل</h2>
+
+<div class="card">
+<h3>أوقات اليوم</h3>
+<table>
+<tr><td>الفجر</td><td id="fajr">--</td></tr>
+<tr><td>الظهر</td><td id="dhuhr">--</td></tr>
+<tr><td>العصر</td><td id="asr">--</td></tr>
+<tr><td>المغرب (الإفطار)</td><td id="maghrib">--</td></tr>
+<tr><td>العشاء</td><td id="isha">--</td></tr>
+<tr><td>الإمساك</td><td id="imsak">--</td></tr>
+</table>
+</div>
+
+<div class="card duaa">
+🤲 اللهم اغفر وارحم  
+المرحوم أحمد محي الدين  
+واجعل قبره روضة من رياض الجنة
+</div>
+
+<script>
+fetch("https://api.aladhan.com/v1/timingsByCity?city=Mosul&country=Iraq&method=4")
+.then(res => res.json())
+.then(data=>{
+   let t = data.data.timings;
+   document.getElementById("fajr").innerHTML = t.Fajr;
+   document.getElementById("dhuhr").innerHTML = t.Dhuhr;
+   document.getElementById("asr").innerHTML = t.Asr;
+   document.getElementById("maghrib").innerHTML = t.Maghrib;
+   document.getElementById("isha").innerHTML = t.Isha;
+
+   let fajrTime = t.Fajr.split(":");
+   let imsakMin = parseInt(fajrTime[1]) - 10;
+   document.getElementById("imsak").innerHTML = fajrTime[0] + ":" + imsakMin;
+});
+</script>
+
+</body>
+</html>
