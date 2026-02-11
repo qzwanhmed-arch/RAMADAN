@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إمساكية رمضان 2026 - الموصل</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Changa:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Changa:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #d4af37;
             --navy: #050a24;
-            --glass: rgba(255, 255, 255, 0.1);
+            --light-gold: #f3e5ab;
             --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.1);
         }
 
         body {
@@ -20,180 +21,319 @@
             margin: 0;
             padding: 10px;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .container { max-width: 600px; margin: auto; }
+        .app-container { width: 100%; max-width: 700px; }
 
-        /* تصميم الدعاء المتميز */
-        .dua-section {
-            background: rgba(212, 175, 55, 0.1);
-            border: 2px double var(--gold);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            margin: 20px 0;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-        }
-        .dua-section h2 { font-family: 'Amiri', serif; color: var(--gold); margin: 0 0 10px 0; font-size: 1.8rem; }
-        .dua-section p { font-size: 1.2rem; line-height: 1.6; margin: 0; font-weight: 600; }
-
-        /* كارت الوقت والعد التنازلي */
-        .timer-card {
+        /* الساعة والعد التنازلي */
+        .status-card {
             background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
             padding: 20px;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.2);
             margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .clock { font-size: 2.5rem; font-weight: 700; color: var(--gold); }
-        .countdown-label { font-size: 1rem; color: #bdc3c7; margin-top: 10px; }
-        .countdown-time { font-size: 1.4rem; color: #2ecc71; font-weight: bold; }
+        #main-clock { font-size: 2.8rem; font-weight: 700; color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        .next-prayer { font-size: 1.1rem; color: #fff; margin-top: 5px; }
+        #timer { font-size: 1.4rem; font-weight: bold; color: #2ecc71; }
 
-        /* التبويبات */
-        .tabs {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
+        /* تصميم الدعاء البارز */
+        .dua-highlight {
+            background: linear-gradient(45deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.2));
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 25px 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
         }
-        .tab-btn {
+        .dua-highlight p {
+            font-family: 'Amiri', serif;
+            font-size: 1.6rem;
+            color: var(--light-gold);
+            line-height: 1.8;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* نظام التبويبات (الأسابيع) */
+        .week-nav {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .week-tab {
             background: var(--glass);
             border: 1px solid var(--gold);
             color: white;
-            padding: 12px;
+            padding: 12px 5px;
             border-radius: 12px;
             cursor: pointer;
-            font-family: 'Changa';
+            font-size: 0.85rem;
+            font-weight: 600;
             transition: 0.3s;
+            text-align: center;
         }
-        .tab-btn.active { background: var(--gold); color: var(--navy); font-weight: bold; }
+        .week-tab.active {
+            background: var(--gold);
+            color: var(--navy);
+            box-shadow: 0 0 15px var(--gold);
+        }
 
-        /* الجداول */
-        .table-wrapper {
+        /* الجدول المنظم */
+        .table-section {
             background: white;
             border-radius: 20px;
-            overflow-x: auto;
+            overflow: hidden;
             display: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
-        .table-wrapper.active { display: block; }
+        .table-section.active { display: block; animation: fadeIn 0.5s ease; }
 
-        table { width: 100%; border-collapse: collapse; color: #333; font-size: 0.75rem; min-width: 500px; }
-        th { background: #2c3e50; color: var(--gold); padding: 12px 5px; }
-        td { padding: 12px 5px; text-align: center; border-bottom: 1px solid #eee; font-weight: 600; }
+        .scroll-hint {
+            text-align: center;
+            color: #bdc3c7;
+            font-size: 0.7rem;
+            margin-bottom: 5px;
+        }
 
-        .imsak-row { color: #8e44ad; }
-        .maghrib-row { background: #fff5f5; color: #e74c3c; }
-        .today-highlight { background: #fff9c4 !important; outline: 2px solid var(--gold); }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; color: #333; }
+        th { background: #2c3e50; color: var(--gold); padding: 15px 5px; font-size: 0.8rem; }
+        td { padding: 12px 5px; text-align: center; border-bottom: 1px solid #eee; font-size: 0.85rem; font-weight: bold; }
 
-        footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #bdc3c7; }
+        /* تمييز الصفوف */
+        .row-today { background: #fff9c4 !important; outline: 2px solid var(--gold); }
+        .col-imsak { color: #8e44ad; background: #fdfaff; }
+        .col-maghrib { color: #e74c3c; background: #fff5f5; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 480px) {
+            #main-clock { font-size: 2.2rem; }
+            .dua-highlight p { font-size: 1.3rem; }
+            .week-tab { font-size: 0.75rem; padding: 10px 2px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header style="text-align: center; padding: 10px 0;">
-        <h1 style="font-family: 'Amiri'; color: var(--gold); margin: 0;">🌙 إمساكية الموصل 2026</h1>
-    </header>
+    <div class="app-container">
+        <header style="text-align: center; padding: 10px 0;">
+            <h2 style="color: var(--gold); margin: 0; font-family: 'Amiri'; font-size: 1.8rem;">🌙 إمساكية رمضان 1447هـ - الموصل</h2>
+        </header>
 
-    <div class="timer-card">
-        <div id="clock" class="clock">00:00:00</div>
-        <div id="next-prayer-name" class="countdown-label">المتبقي للصلاة القادمة</div>
-        <div id="countdown" class="countdown-time">--:--:--</div>
+        <div class="status-card">
+            <div id="main-clock">00:00:00</div>
+            <div class="next-prayer">المتبقي لـ <span id="prayer-name" style="color: var(--gold);">الإفطار</span></div>
+            <div id="timer">--:--:--</div>
+        </div>
+
+        <div class="dua-highlight">
+            <p>
+                اللهم اغفر وارحم المرحوم <br>
+                <b>أحمد محي الدين</b> <br>
+                واجعل قبره روضة من رياض الجنة وأسكنه فسيح جناتك
+            </p>
+        </div>
+
+        <div class="week-nav">
+            <div class="week-tab active" onclick="switchWeek(1)">الأسبوع 1</div>
+            <div class="week-tab" onclick="switchWeek(2)">الأسبوع 2</div>
+            <div class="week-tab" onclick="switchWeek(3)">الأسبوع 3</div>
+            <div class="week-tab" onclick="switchWeek(4)">الأسبوع 4</div>
+        </div>
+
+        <p class="scroll-hint">اسحب الجدول لليسار لرؤية باقي الأوقات ⬅️</p>
+
+        <div id="week1-container" class="table-section active">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رمضان</th>
+                            <th>اليوم</th>
+                            <th class="col-imsak">الإمساك</th>
+                            <th>الفجر</th>
+                            <th>الشروق</th>
+                            <th>الظهر</th>
+                            <th>العصر</th>
+                            <th class="col-maghrib">المغرب</th>
+                            <th>العشاء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-w1"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="week2-container" class="table-section">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رمضان</th>
+                            <th>اليوم</th>
+                            <th class="col-imsak">الإمساك</th>
+                            <th>الفجر</th>
+                            <th>الشروق</th>
+                            <th>الظهر</th>
+                            <th>العصر</th>
+                            <th class="col-maghrib">المغرب</th>
+                            <th>العشاء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-w2"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="week3-container" class="table-section">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رمضان</th>
+                            <th>اليوم</th>
+                            <th class="col-imsak">الإمساك</th>
+                            <th>الفجر</th>
+                            <th>الشروق</th>
+                            <th>الظهر</th>
+                            <th>العصر</th>
+                            <th class="col-maghrib">المغرب</th>
+                            <th>العشاء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-w3"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="week4-container" class="table-section">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رمضان</th>
+                            <th>اليوم</th>
+                            <th class="col-imsak">الإمساك</th>
+                            <th>الفجر</th>
+                            <th>الشروق</th>
+                            <th>الظهر</th>
+                            <th>العصر</th>
+                            <th class="col-maghrib">المغرب</th>
+                            <th>العشاء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-w4"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer style="text-align: center; padding: 25px; font-size: 0.8rem; color: #bdc3c7;">
+            مواقيت مدينة الموصل - العراق 2026
+        </footer>
     </div>
 
-    <div class="dua-section">
-        <h2>صدقة جارية</h2>
-        <p>"اللهم اغفر وارحم المرحوم <b>أحمد محي الدين</b> واجعل قبره روضة من رياض الجنة وأسكنه فسيح جناتك"</p>
-    </div>
+    <script>
+        // بيانات المواقيت الكاملة (تقديرية لمدينة الموصل فبراير/مارس 2026)
+        const ramadanDays = [
+            // الأسبوع الأول
+            { r:1, d:"2026-02-18", n:"الأربعاء", t:["05:16 ص","05:26 ص","06:50 ص","12:21 م","03:28 م","05:52 م","07:12 م"] },
+            { r:2, d:"2026-02-19", n:"الخميس", t:["05:15 ص","05:25 ص","06:49 ص","12:21 م","03:29 م","05:53 م","07:13 م"] },
+            { r:3, d:"2026-02-20", n:"الجمعة", t:["05:14 ص","05:24 ص","06:48 ص","12:21 م","03:30 م","05:54 م","07:14 م"] },
+            { r:4, d:"2026-02-21", n:"السبت", t:["05:13 ص","05:23 ص","06:47 ص","12:21 م","03:31 م","05:55 م","07:15 م"] },
+            { r:5, d:"2026-02-22", n:"الأحد", t:["05:11 ص","05:21 ص","06:45 ص","12:21 م","03:32 م","05:56 م","07:16 م"] },
+            { r:6, d:"2026-02-23", n:"الاثنين", t:["05:10 ص","05:20 ص","06:44 ص","12:21 م","03:33 م","05:57 م","07:17 م"] },
+            { r:7, d:"2026-02-24", n:"الثلاثاء", t:["05:09 ص","05:19 ص","06:43 ص","12:21 م","03:34 م","05:58 م","07:18 م"] },
+            // الأسبوع الثاني
+            { r:8, d:"2026-02-25", n:"الأربعاء", t:["05:08 ص","05:18 ص","06:42 ص","12:20 م","03:35 م","05:59 م","07:19 م"] },
+            { r:9, d:"2026-02-26", n:"الخميس", t:["05:07 ص","05:17 ص","06:41 ص","12:20 م","03:36 م","06:00 م","07:20 م"] },
+            { r:10, d:"2026-02-27", n:"الجمعة", t:["05:06 ص","05:16 ص","06:39 ص","12:20 م","03:37 م","06:01 م","07:21 م"] },
+            { r:11, d:"2026-02-28", n:"السبت", t:["05:05 ص","05:15 ص","06:38 ص","12:20 م","03:38 م","06:02 م","07:22 م"] },
+            { r:12, d:"2026-03-01", n:"الأحد", t:["05:03 ص","05:13 ص","06:37 ص","12:20 م","03:39 م","06:03 م","07:23 م"] },
+            { r:13, d:"2026-03-02", n:"الاثنين", t:["05:02 ص","05:12 ص","06:35 ص","12:19 م","03:40 م","06:04 م","07:24 م"] },
+            { r:14, d:"2026-03-03", n:"الثلاثاء", t:["05:01 ص","05:11 ص","06:34 ص","12:19 م","03:41 م","06:05 م","07:25 م"] },
+            // الأسبوع الثالث
+            { r:15, d:"2026-03-04", n:"الأربعاء", t:["05:00 ص","05:10 ص","06:33 ص","12:19 م","03:42 م","06:06 م","07:26 م"] },
+            { r:16, d:"2026-03-05", n:"الخميس", t:["04:58 ص","05:08 ص","06:31 ص","12:19 م","03:43 م","06:07 م","07:27 م"] },
+            { r:17, d:"2026-03-06", n:"الجمعة", t:["04:57 ص","05:07 ص","06:30 ص","12:18 م","03:44 م","06:08 م","07:28 م"] },
+            { r:18, d:"2026-03-07", n:"السبت", t:["04:56 ص","05:06 ص","06:29 ص","12:18 م","03:45 م","06:09 م","07:29 م"] },
+            { r:19, d:"2026-03-08", n:"الأحد", t:["04:54 ص","05:04 ص","06:27 ص","12:18 م","03:46 م","06:10 م","07:30 م"] },
+            { r:20, d:"2026-03-09", n:"الاثنين", t:["04:53 ص","05:03 ص","06:26 ص","12:18 م","03:46 م","06:11 م","07:31 م"] },
+            { r:21, d:"2026-03-10", n:"الثلاثاء", t:["04:51 ص","05:01 ص","06:24 ص","12:17 م","03:47 م","06:12 م","07:32 م"] },
+            // الأسبوع الرابع
+            { r:22, d:"2026-03-11", n:"الأربعاء", t:["04:50 ص","05:00 ص","06:23 ص","12:17 م","03:48 م","06:13 م","07:33 م"] },
+            { r:23, d:"2026-03-12", n:"الخميس", t:["04:48 ص","04:58 ص","06:21 ص","12:17 م","03:49 م","06:14 م","07:34 م"] },
+            { r:24, d:"2026-03-13", n:"الجمعة", t:["04:47 ص","04:57 ص","06:20 ص","12:17 م","03:50 م","06:15 م","07:35 م"] },
+            { r:25, d:"2026-03-14", n:"السبت", t:["04:46 ص","04:56 ص","06:19 ص","12:16 م","03:51 م","06:16 م","07:36 م"] },
+            { r:26, d:"2026-03-15", n:"الأحد", t:["04:44 ص","04:54 ص","06:17 ص","12:16 م","03:51 م","06:17 م","07:37 م"] },
+            { r:27, d:"2026-03-16", n:"الاثنين", t:["04:43 ص","04:53 ص","06:16 ص","12:16 م","03:52 م","06:18 م","07:38 م"] },
+            { r:28, d:"2026-03-17", n:"الثلاثاء", t:["04:41 ص","04:51 ص","06:15 ص","12:15 م","03:53 م","06:19 م","07:39 م"] },
+            { r:29, d:"2026-03-18", n:"الأربعاء", t:["04:40 ص","04:50 ص","06:13 ص","12:15 م","03:54 م","06:20 م","07:40 م"] },
+            { r:30, d:"2026-03-19", n:"الخميس", t:["04:38 ص","04:48 ص","06:12 ص","12:15 م","03:55 م","06:21 م","07:41 م"] }
+        ];
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="showWeek(1)">النصف الأول</button>
-        <button class="tab-btn" onclick="showWeek(2)">النصف الثاني</button>
-    </div>
-
-    <div id="week1" class="table-wrapper active">
-        <table>
-            <thead>
-                <tr>
-                    <th>رمضان</th>
-                    <th>اليوم</th>
-                    <th style="color:#8e44ad">الإمساك</th>
-                    <th>الفجر</th>
-                    <th>الشروق</th>
-                    <th>الظهر</th>
-                    <th>العصر</th>
-                    <th style="color:#e74c3c">المغرب</th>
-                    <th>العشاء</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                </tbody>
-        </table>
-    </div>
-
-    <footer>* المواعيد مبنية على توقيت مدينة الموصل المحلي لعام 2026</footer>
-</div>
-
-<script>
-    // البيانات الكاملة لرمضان 2026 (الموصل)
-    const ramadanData = [
-        {day:1, date:"2026-02-18", dayName:"الأربعاء", times:["05:16 ص","05:26 ص","06:50 ص","12:21 م","03:28 م","05:52 م","07:12 م"]},
-        {day:2, date:"2026-02-19", dayName:"الخميس", times:["05:15 ص","05:25 ص","06:49 ص","12:21 م","03:29 م","05:53 م","07:13 م"]},
-        {day:3, date:"2026-02-20", dayName:"الجمعة", times:["05:14 ص","05:24 ص","06:48 ص","12:21 م","03:30 م","05:54 م","07:14 م"]},
-        {day:4, date:"2026-02-21", dayName:"السبت", times:["05:13 ص","05:23 ص","06:47 ص","12:21 م","03:31 م","05:55 م","07:15 م"]},
-        {day:5, date:"2026-02-22", dayName:"الأحد", times:["05:11 ص","05:21 ص","06:45 ص","12:21 م","03:32 م","05:56 م","07:16 م"]},
-        {day:6, date:"2026-02-23", dayName:"الاثنين", times:["05:10 ص","05:20 ص","06:44 ص","12:21 م","03:33 م","05:57 م","07:17 م"]},
-        {day:7, date:"2026-02-24", dayName:"الثلاثاء", times:["05:09 ص","05:19 ص","06:43 ص","12:21 م","03:34 م","05:58 م","07:18 م"]},
-        {day:8, date:"2026-02-25", dayName:"الأربعاء", times:["05:08 ص","05:18 ص","06:42 ص","12:20 م","03:35 م","05:59 م","07:19 م"]},
-        {day:9, date:"2026-02-26", dayName:"الخميس", times:["05:07 ص","05:17 ص","06:41 ص","12:20 م","03:36 م","06:00 م","07:20 م"]},
-        {day:10, date:"2026-02-27", dayName:"الجمعة", times:["05:06 ص","05:16 ص","06:39 ص","12:20 م","03:37 م","06:01 م","07:21 م"]},
-        {day:11, date:"2026-02-28", dayName:"السبت", times:["05:05 ص","05:15 ص","06:38 ص","12:20 م","03:38 م","06:02 م","07:22 م"]},
-        {day:12, date:"2026-03-01", dayName:"الأحد", times:["05:03 ص","05:13 ص","06:37 ص","12:20 م","03:39 م","06:03 م","07:23 م"]},
-        {day:13, date:"2026-03-02", dayName:"الاثنين", times:["05:02 ص","05:12 ص","06:35 ص","12:19 م","03:40 م","06:04 م","07:24 م"]},
-        {day:14, date:"2026-03-03", dayName:"الثلاثاء", times:["05:01 ص","05:11 ص","06:34 ص","12:19 م","03:41 م","06:05 م","07:25 م"]},
-        {day:15, date:"2026-03-04", dayName:"الأربعاء", times:["05:00 ص","05:10 ص","06:33 ص","12:19 م","03:42 م","06:06 م","07:26 م"]}
-        // ملاحظة: يمكنكِ تكرار نفس النمط لإضافة الـ 15 يوماً المتبقية
-    ];
-
-    function init() {
-        const tbody = document.getElementById('table-body');
-        const today = new Date().toISOString().split('T')[0];
-
-        ramadanData.forEach(item => {
-            const row = document.createElement('tr');
-            if(item.date === today) row.className = 'today-highlight';
+        function fillTables() {
+            const today = new Date().toISOString().split('T')[0];
             
-            row.innerHTML = `
-                <td>${item.day}</td>
-                <td>${item.dayName}</td>
-                <td class="imsak-row">${item.times[0]}</td>
-                <td>${item.times[1]}</td>
-                <td>${item.times[2]}</td>
-                <td>${item.times[3]}</td>
-                <td>${item.times[4]}</td>
-                <td class="maghrib-row">${item.times[5]}</td>
-                <td>${item.times[6]}</td>
-            `;
-            tbody.appendChild(row);
-        });
-    }
+            ramadanDays.forEach((day, index) => {
+                let weekNum = Math.ceil((index + 1) / 7);
+                if(index >= 21) weekNum = 4; // الأسبوع الأخير يضم باقي الأيام
 
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').textContent = now.toLocaleTimeString('ar-EG', {hour12: true});
-        // هنا يمكن إضافة كود العد التنازلي لموعد الصلاة القادم
-    }
+                const tbody = document.getElementById('body-w' + weekNum);
+                const row = document.createElement('tr');
+                if(day.d === today) row.className = "row-today";
 
-    function showWeek(n) {
-        // يمكن تطويرها لتقسيم الجدول لنصفين
-    }
+                row.innerHTML = `
+                    <td>${day.r}</td>
+                    <td>${day.n}</td>
+                    <td class="col-imsak">${day.t[0]}</td>
+                    <td>${day.t[1]}</td>
+                    <td>${day.t[2]}</td>
+                    <td>${day.t[3]}</td>
+                    <td>${day.t[4]}</td>
+                    <td class="col-maghrib">${day.t[5]}</td>
+                    <td>${day.t[6]}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
 
-    setInterval(updateClock, 1000);
-    init();
-</script>
+        function switchWeek(n) {
+            document.querySelectorAll('.table-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.week-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById('week'+n+'-container').classList.add('active');
+            document.querySelectorAll('.week-tab')[n-1].classList.add('active');
+        }
 
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('main-clock').textContent = now.toLocaleTimeString('ar-EG', {hour12: true});
+            
+            // تحديد أقرب صلاة (منطق بسيط للعرض)
+            const currentHour = now.getHours();
+            if(currentHour < 5 || currentHour >= 18) {
+                document.getElementById('prayer-name').textContent = "الإمساك والفجر";
+            } else {
+                document.getElementById('prayer-name').textContent = "الإفطار";
+            }
+        }
+
+        setInterval(updateClock, 1000);
+        fillTables();
+        updateClock();
+        
+        // التوجه تلقائياً للأسبوع الأول
+        switchWeek(1);
+    </script>
 </body>
 </html>
