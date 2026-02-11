@@ -7,147 +7,96 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Changa:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #0c1445;
-            --accent-color: #f1c40f;
-            --text-light: #ecf0f1;
-            --card-bg: rgba(255, 255, 255, 0.08);
+            --primary: #050a24;
+            --accent: #f1c40f;
+            --gold-light: #fdf2d0;
+            --text: #ecf0f1;
+            --card-bg: rgba(255, 255, 255, 0.1);
         }
 
         body {
             font-family: 'Changa', sans-serif;
-            background: linear-gradient(135deg, #050a24 0%, #0c1445 100%);
-            color: var(--text-light);
+            background: linear-gradient(135deg, #050a24 0%, #1a2a6c 100%);
+            color: var(--text);
             margin: 0;
-            padding: 0;
+            padding: 10px;
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            padding: 20px;
-        }
+        .container { max-width: 800px; margin: auto; }
 
-        /* الساعة الرقمية */
-        .live-clock {
+        header { text-align: center; padding: 20px 0; }
+
+        h1 { font-family: 'Amiri', serif; color: var(--accent); margin-bottom: 5px; font-size: 1.8rem; }
+
+        .status-bar {
             background: var(--card-bg);
-            border: 1px solid var(--accent-color);
-            padding: 10px 20px;
-            border-radius: 50px;
-            display: inline-block;
-            font-size: 1.5rem;
-            margin-top: 10px;
-            color: var(--accent-color);
-            box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
-        }
-
-        header {
+            border: 1px solid var(--accent);
+            border-radius: 15px;
+            padding: 15px;
             text-align: center;
-            padding: 40px 0;
+            margin-bottom: 20px;
+            backdrop-filter: blur(5px);
         }
 
-        header h1 {
-            font-family: 'Amiri', serif;
-            font-size: 3rem;
-            margin: 0;
-            color: var(--accent-color);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
+        #clock { font-size: 1.8rem; color: var(--accent); font-weight: bold; }
+        #today-date { font-size: 1rem; color: #fff; margin-bottom: 5px; }
 
-        /* الدعاء */
         .dedication {
-            background: linear-gradient(to left, transparent, rgba(241, 196, 15, 0.2), transparent);
-            border-top: 1px solid var(--accent-color);
-            border-bottom: 1px solid var(--accent-color);
-            padding: 20px;
-            margin: 20px 0 40px;
-            font-size: 1.4rem;
-            line-height: 1.8;
-            font-weight: bold;
-            color: #fff;
+            background: rgba(241, 196, 15, 0.15);
+            border-right: 5px solid var(--accent);
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.6;
+            border-radius: 5px;
             text-align: center;
         }
 
-        /* أزرار الأسابيع */
         .week-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .week-btn {
             background: var(--card-bg);
-            border: 1px solid var(--accent-color);
-            color: #fff;
-            padding: 12px 25px;
-            cursor: pointer;
+            border: 1px solid var(--accent);
+            color: white;
+            padding: 12px;
             border-radius: 8px;
-            font-family: 'Changa', sans-serif;
+            cursor: pointer;
+            font-family: 'Changa';
+            font-size: 0.85rem;
             transition: 0.3s;
-            font-size: 1.1rem;
         }
 
-        .week-btn:hover, .week-btn.active {
-            background: var(--accent-color);
-            color: var(--primary-color);
-            font-weight: bold;
-            transform: translateY(-3px);
-        }
+        .week-btn.active { background: var(--accent); color: var(--primary); font-weight: bold; }
 
-        /* الجدول */
-        .table-container {
-            overflow-x: auto;
-            background: rgba(255, 255, 255, 0.95);
+        .table-wrapper {
+            background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            display: none; /* مخفي افتراضياً */
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            display: none;
+            margin-bottom: 30px;
         }
 
-        .table-container.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
+        .table-wrapper.active { display: block; animation: slideIn 0.4s ease-out; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            color: #333;
-        }
+        table { width: 100%; border-collapse: collapse; color: #333; font-size: 0.8rem; }
+        th { background: #2c3e50; color: var(--accent); padding: 12px 4px; }
+        td { padding: 12px 4px; text-align: center; border-bottom: 1px solid #eee; }
 
-        th, td {
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
+        .today-highlight { background-color: #fff9c4 !important; border: 2px solid var(--accent); font-weight: bold; }
+        .prayer-time { font-weight: bold; color: #2c3e50; }
+        .maghrib { color: #e74c3c; font-weight: bold; background: #fff5f5; }
 
-        th {
-            background-color: #2c3e50;
-            color: var(--accent-color);
-            font-size: 1.1rem;
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .highlight-red { color: #e74c3c; font-weight: bold; }
-        .highlight-green { color: #27ae60; font-weight: bold; }
-
-        tr:hover { background-color: #f1f1f1; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            color: #bdc3c7;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 600px) {
-            header h1 { font-size: 2rem; }
-            .week-btn { width: 100%; }
+        @media (max-width: 480px) {
+            th, td { font-size: 0.7rem; padding: 10px 2px; }
         }
     </style>
 </head>
@@ -156,151 +105,126 @@
 <div class="container">
     <header>
         <h1>🌙 إمساكية رمضان 1447هـ</h1>
-        <p>الموصل، العراق - 2026م</p>
-        <div class="live-clock" id="clock">00:00:00</div>
+        <div class="status-bar">
+            <div id="today-date"></div>
+            <div id="clock">00:00:00</div>
+        </div>
     </header>
 
     <div class="dedication">
-        "اللهم اغفر وارحم المرحوم <b>أحمد محي الدين</b> واجعل قبره روضة من رياض الجنة، وأسكنه فسيح جناتك مع الصديقين والشهداء"
+        اللهم اغفر وارحم المرحوم <b>أحمد محي الدين</b> واجعل قبره روضة من رياض الجنة وأسكنه فسيح جناتك.
     </div>
 
     <div class="week-tabs">
-        <button class="week-btn active" onclick="showWeek(1)">الأسبوع الأول</button>
-        <button class="week-btn" onclick="showWeek(2)">الأسبوع الثاني</button>
-        <button class="week-btn" onclick="showWeek(3)">الأسبوع الثالث</button>
-        <button class="week-btn" onclick="showWeek(4)">العشر الأواخر</button>
+        <button class="week-btn active" id="btn1" onclick="showWeek(1)">الأسبوع الأول</button>
+        <button class="week-btn" id="btn2" onclick="showWeek(2)">الأسبوع الثاني</button>
+        <button class="week-btn" id="btn3" onclick="showWeek(3)">الأسبوع الثالث</button>
+        <button class="week-btn" id="btn4" onclick="showWeek(4)">العشر الأواخر</button>
     </div>
 
-    <div id="week1" class="table-container active">
+    <div id="week1" class="table-wrapper active">
         <table>
             <thead>
-                <tr>
-                    <th>رمضان</th>
-                    <th>اليوم</th>
-                    <th>التاريخ</th>
-                    <th class="highlight-red">الإمساك</th>
-                    <th class="highlight-red">الفجر</th>
-                    <th class="highlight-green">الإفطار</th>
-                </tr>
+                <tr><th>رمضان</th><th>اليوم</th><th>فجر</th><th>ظهر</th><th>عصر</th><th style="color:red">مغرب</th><th>عشاء</th></tr>
             </thead>
             <tbody>
-                <tr><td>1</td><td>الأربعاء</td><td>18 فبراير</td><td>05:16</td><td>05:26</td><td>05:52</td></tr>
-                <tr><td>2</td><td>الخميس</td><td>19 فبراير</td><td>05:15</td><td>05:25</td><td>05:53</td></tr>
-                <tr><td>3</td><td>الجمعة</td><td>20 فبراير</td><td>05:14</td><td>05:24</td><td>05:54</td></tr>
-                <tr><td>4</td><td>السبت</td><td>21 فبراير</td><td>05:13</td><td>05:23</td><td>05:55</td></tr>
-                <tr><td>5</td><td>الأحد</td><td>22 فبراير</td><td>05:11</td><td>05:21</td><td>05:56</td></tr>
-                <tr><td>6</td><td>الاثنين</td><td>23 فبراير</td><td>05:10</td><td>05:20</td><td>05:57</td></tr>
-                <tr><td>7</td><td>الثلاثاء</td><td>24 فبراير</td><td>05:09</td><td>05:19</td><td>05:58</td></tr>
+                <tr data-date="2026-02-18"><td>1</td><td>الأربعاء</td><td>05:26 ص</td><td>12:21 م</td><td>03:28 م</td><td class="maghrib">05:52 م</td><td>07:12 م</td></tr>
+                <tr data-date="2026-02-19"><td>2</td><td>الخميس</td><td>05:25 ص</td><td>12:21 م</td><td>03:29 م</td><td class="maghrib">05:53 م</td><td>07:13 م</td></tr>
+                <tr data-date="2026-02-20"><td>3</td><td>الجمعة</td><td>05:24 ص</td><td>12:21 م</td><td>03:30 م</td><td class="maghrib">05:54 م</td><td>07:14 م</td></tr>
+                <tr data-date="2026-02-21"><td>4</td><td>السبت</td><td>05:23 ص</td><td>12:21 م</td><td>03:31 م</td><td class="maghrib">05:55 م</td><td>07:15 م</td></tr>
+                <tr data-date="2026-02-22"><td>5</td><td>الأحد</td><td>05:21 ص</td><td>12:21 م</td><td>03:32 م</td><td class="maghrib">05:56 م</td><td>07:16 م</td></tr>
+                <tr data-date="2026-02-23"><td>6</td><td>الاثنين</td><td>05:20 ص</td><td>12:21 م</td><td>03:33 م</td><td class="maghrib">05:57 م</td><td>07:17 م</td></tr>
+                <tr data-date="2026-02-24"><td>7</td><td>الثلاثاء</td><td>05:19 ص</td><td>12:21 م</td><td>03:34 م</td><td class="maghrib">05:58 م</td><td>07:18 م</td></tr>
             </tbody>
         </table>
     </div>
 
-    <div id="week2" class="table-container">
+    <div id="week2" class="table-wrapper">
         <table>
             <thead>
-                <tr>
-                    <th>رمضان</th>
-                    <th>اليوم</th>
-                    <th>التاريخ</th>
-                    <th class="highlight-red">الإمساك</th>
-                    <th class="highlight-red">الفجر</th>
-                    <th class="highlight-green">الإفطار</th>
-                </tr>
+                <tr><th>رمضان</th><th>اليوم</th><th>فجر</th><th>ظهر</th><th>عصر</th><th style="color:red">مغرب</th><th>عشاء</th></tr>
             </thead>
             <tbody>
-                <tr><td>8</td><td>الأربعاء</td><td>25 فبراير</td><td>05:08</td><td>05:18</td><td>05:59</td></tr>
-                <tr><td>9</td><td>الخميس</td><td>26 فبراير</td><td>05:07</td><td>05:17</td><td>06:00</td></tr>
-                <tr><td>10</td><td>الجمعة</td><td>27 فبراير</td><td>05:06</td><td>05:16</td><td>06:01</td></tr>
-                <tr><td>11</td><td>السبت</td><td>28 فبراير</td><td>05:05</td><td>05:15</td><td>06:02</td></tr>
-                <tr><td>12</td><td>الأحد</td><td>1 مارس</td><td>05:03</td><td>05:13</td><td>06:03</td></tr>
-                <tr><td>13</td><td>الاثنين</td><td>2 مارس</td><td>05:02</td><td>05:12</td><td>06:04</td></tr>
-                <tr><td>14</td><td>الثلاثاء</td><td>3 مارس</td><td>05:01</td><td>05:11</td><td>06:05</td></tr>
+                <tr data-date="2026-02-25"><td>8</td><td>الأربعاء</td><td>05:18 ص</td><td>12:20 م</td><td>03:35 م</td><td class="maghrib">05:59 م</td><td>07:19 م</td></tr>
+                <tr data-date="2026-02-26"><td>9</td><td>الخميس</td><td>05:17 ص</td><td>12:20 م</td><td>03:36 م</td><td class="maghrib">06:00 م</td><td>07:20 م</td></tr>
+                <tr data-date="2026-02-27"><td>10</td><td>الجمعة</td><td>05:16 ص</td><td>12:20 م</td><td>03:37 م</td><td class="maghrib">06:01 م</td><td>07:21 م</td></tr>
+                <tr data-date="2026-02-28"><td>11</td><td>السبت</td><td>05:15 ص</td><td>12:20 م</td><td>03:38 م</td><td class="maghrib">06:02 م</td><td>07:22 م</td></tr>
+                <tr data-date="2026-03-01"><td>12</td><td>الأحد</td><td>05:13 ص</td><td>12:20 م</td><td>03:39 م</td><td class="maghrib">06:03 م</td><td>07:23 م</td></tr>
+                <tr data-date="2026-03-02"><td>13</td><td>الاثنين</td><td>05:12 ص</td><td>12:19 م</td><td>03:40 م</td><td class="maghrib">06:04 م</td><td>07:24 م</td></tr>
+                <tr data-date="2026-03-03"><td>14</td><td>الثلاثاء</td><td>05:11 ص</td><td>12:19 م</td><td>03:41 م</td><td class="maghrib">06:05 م</td><td>07:25 م</td></tr>
             </tbody>
         </table>
     </div>
 
-    <div id="week3" class="table-container">
+    <div id="week3" class="table-wrapper">
         <table>
             <thead>
-                <tr>
-                    <th>رمضان</th>
-                    <th>اليوم</th>
-                    <th>التاريخ</th>
-                    <th class="highlight-red">الإمساك</th>
-                    <th class="highlight-red">الفجر</th>
-                    <th class="highlight-green">الإفطار</th>
-                </tr>
+                <tr><th>رمضان</th><th>اليوم</th><th>فجر</th><th>ظهر</th><th>عصر</th><th style="color:red">مغرب</th><th>عشاء</th></tr>
             </thead>
             <tbody>
-                <tr><td>15</td><td>الأربعاء</td><td>4 مارس</td><td>05:00</td><td>05:10</td><td>06:06</td></tr>
-                <tr><td>16</td><td>الخميس</td><td>5 مارس</td><td>04:58</td><td>05:08</td><td>06:07</td></tr>
-                <tr><td>17</td><td>الجمعة</td><td>6 مارس</td><td>04:57</td><td>05:07</td><td>06:08</td></tr>
-                <tr><td>18</td><td>السبت</td><td>7 مارس</td><td>04:56</td><td>05:06</td><td>06:09</td></tr>
-                <tr><td>19</td><td>الأحد</td><td>8 مارس</td><td>04:54</td><td>05:04</td><td>06:10</td></tr>
-                <tr><td>20</td><td>الاثنين</td><td>9 مارس</td><td>04:53</td><td>05:03</td><td>06:11</td></tr>
-                <tr><td>21</td><td>الثلاثاء</td><td>10 مارس</td><td>04:51</td><td>05:01</td><td>06:12</td></tr>
+                <tr data-date="2026-03-04"><td>15</td><td>الأربعاء</td><td>05:10 ص</td><td>12:19 م</td><td>03:42 م</td><td class="maghrib">06:06 م</td><td>07:26 م</td></tr>
+                <tr data-date="2026-03-05"><td>16</td><td>الخميس</td><td>05:08 ص</td><td>12:19 م</td><td>03:43 م</td><td class="maghrib">06:07 م</td><td>07:27 م</td></tr>
+                <tr data-date="2026-03-06"><td>17</td><td>الجمعة</td><td>05:07 ص</td><td>12:18 م</td><td>03:44 م</td><td class="maghrib">06:08 م</td><td>07:28 م</td></tr>
+                <tr data-date="2026-03-07"><td>18</td><td>السبت</td><td>05:06 ص</td><td>12:18 م</td><td>03:45 م</td><td class="maghrib">06:09 م</td><td>07:29 م</td></tr>
+                <tr data-date="2026-03-08"><td>19</td><td>الأحد</td><td>05:04 ص</td><td>12:18 م</td><td>03:46 م</td><td class="maghrib">06:10 م</td><td>07:30 م</td></tr>
+                <tr data-date="2026-03-09"><td>20</td><td>الاثنين</td><td>05:03 ص</td><td>12:18 م</td><td>03:46 م</td><td class="maghrib">06:11 م</td><td>07:31 م</td></tr>
+                <tr data-date="2026-03-10"><td>21</td><td>الثلاثاء</td><td>05:01 ص</td><td>12:17 م</td><td>03:47 م</td><td class="maghrib">06:12 م</td><td>07:32 م</td></tr>
             </tbody>
         </table>
     </div>
 
-    <div id="week4" class="table-container">
+    <div id="week4" class="table-wrapper">
         <table>
             <thead>
-                <tr>
-                    <th>رمضان</th>
-                    <th>اليوم</th>
-                    <th>التاريخ</th>
-                    <th class="highlight-red">الإمساك</th>
-                    <th class="highlight-red">الفجر</th>
-                    <th class="highlight-green">الإفطار</th>
-                </tr>
+                <tr><th>رمضان</th><th>اليوم</th><th>فجر</th><th>ظهر</th><th>عصر</th><th style="color:red">مغرب</th><th>عشاء</th></tr>
             </thead>
             <tbody>
-                <tr><td>22</td><td>الأربعاء</td><td>11 مارس</td><td>04:50</td><td>05:00</td><td>06:13</td></tr>
-                <tr><td>23</td><td>الخميس</td><td>12 مارس</td><td>04:48</td><td>04:58</td><td>06:14</td></tr>
-                <tr><td>24</td><td>الجمعة</td><td>13 مارس</td><td>04:47</td><td>04:57</td><td>06:15</td></tr>
-                <tr><td>25</td><td>السبت</td><td>14 مارس</td><td>04:46</td><td>04:56</td><td>06:16</td></tr>
-                <tr><td>26</td><td>الأحد</td><td>15 مارس</td><td>04:44</td><td>04:54</td><td>06:17</td></tr>
-                <tr><td>27</td><td>الاثنين</td><td>16 مارس</td><td>04:43</td><td>04:53</td><td>06:18</td></tr>
-                <tr><td>28</td><td>الثلاثاء</td><td>17 مارس</td><td>04:41</td><td>04:51</td><td>06:19</td></tr>
-                <tr><td>29</td><td>الأربعاء</td><td>18 مارس</td><td>04:40</td><td>04:50</td><td>06:20</td></tr>
-                <tr><td>30</td><td>الخميس</td><td>19 مارس</td><td>04:38</td><td>04:48</td><td>06:21</td></tr>
+                <tr data-date="2026-03-11"><td>22</td><td>الأربعاء</td><td>05:00 ص</td><td>12:17 م</td><td>03:48 م</td><td class="maghrib">06:13 م</td><td>07:33 م</td></tr>
+                <tr data-date="2026-03-12"><td>23</td><td>الخميس</td><td>04:58 ص</td><td>12:17 م</td><td>03:49 م</td><td class="maghrib">06:14 م</td><td>07:34 م</td></tr>
+                <tr data-date="2026-03-13"><td>24</td><td>الجمعة</td><td>04:47 ص</td><td>12:17 م</td><td>03:50 م</td><td class="maghrib">06:15 م</td><td>07:35 م</td></tr>
+                <tr data-date="2026-03-14"><td>25</td><td>السبت</td><td>04:46 ص</td><td>12:16 م</td><td>03:51 م</td><td class="maghrib">06:16 م</td><td>07:36 م</td></tr>
+                <tr data-date="2026-03-15"><td>26</td><td>الأحد</td><td>04:44 ص</td><td>12:16 م</td><td>03:51 م</td><td class="maghrib">06:17 م</td><td>07:37 م</td></tr>
+                <tr data-date="2026-03-16"><td>27</td><td>الاثنين</td><td>04:43 ص</td><td>12:16 م</td><td>03:52 م</td><td class="maghrib">06:18 م</td><td>07:38 م</td></tr>
+                <tr data-date="2026-03-17"><td>28</td><td>الثلاثاء</td><td>04:41 ص</td><td>12:15 م</td><td>03:53 م</td><td class="maghrib">06:19 م</td><td>07:39 م</td></tr>
+                <tr data-date="2026-03-18"><td>29</td><td>الأربعاء</td><td>04:40 ص</td><td>12:15 م</td><td>03:54 م</td><td class="maghrib">06:20 م</td><td>07:40 م</td></tr>
+                <tr data-date="2026-03-19"><td>30</td><td>الخميس</td><td>04:38 ص</td><td>12:15 م</td><td>03:55 م</td><td class="maghrib">06:21 م</td><td>07:41 م</td></tr>
             </tbody>
         </table>
     </div>
 
-    <footer>
-        <p>اللهم اجعلنا ممن صامه وقامه إيماناً واحتساباً</p>
-        <p>تقبل الله طاعتكم</p>
-    </footer>
 </div>
 
 <script>
-    // وظيفة الساعة الرقمية
-    function updateClock() {
+    function updateApp() {
         const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        document.getElementById('clock').textContent = now.toLocaleTimeString('ar-EG', { hour12: true });
+        document.getElementById('today-date').textContent = now.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        const todayStr = now.toISOString().split('T')[0];
+        const rows = document.querySelectorAll('tr[data-date]');
+        
+        rows.forEach(row => {
+            if(row.getAttribute('data-date') === todayStr) {
+                row.classList.add('today-highlight');
+                // تفعيل الأسبوع الصحيح تلقائياً
+                const parentId = row.parentElement.parentElement.parentElement.id;
+                showWeek(parentId.replace('week', ''));
+            }
+        });
     }
-    setInterval(updateClock, 1000);
-    updateClock();
 
-    // وظيفة التنقل بين الأسابيع
-    function showWeek(weekNum) {
-        // إخفاء كل الجداول
-        const tables = document.querySelectorAll('.table-container');
-        tables.forEach(t => t.classList.remove('active'));
-
-        // إزالة اللون من كل الأزرار
-        const buttons = document.querySelectorAll('.week-btn');
-        buttons.forEach(b => b.classList.remove('active'));
-
-        // إظهار الجدول المطلوب وتفعيل الزر
-        document.getElementById('week' + weekNum).classList.add('active');
-        event.currentTarget.classList.add('active');
+    function showWeek(n) {
+        document.querySelectorAll('.table-wrapper').forEach(w => w.classList.remove('active'));
+        document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+        
+        const target = document.getElementById('week' + n);
+        const btn = document.getElementById('btn' + n);
+        if(target) target.classList.add('active');
+        if(btn) btn.classList.add('active');
     }
+
+    setInterval(updateApp, 1000);
+    updateApp();
 </script>
 
 </body>
